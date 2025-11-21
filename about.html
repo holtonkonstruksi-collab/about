@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontrak Tukang Harian — Holton Konstruksi</title>
+  <!-- html2pdf.js dari CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --brand-yellow: #FFD700;
+      --brand-yellow-light: #FFF5B8;
+      --brand-yellow-dark: #CCAC00;
+      --bg-dark: #0a0a0a;
+      --card-bg: #121212;
+      --text-primary: #f5f5f5;
+      --text-secondary: #bbb;
+      --border-color: #333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding-bottom: 3rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--bg-dark), #151515);
+      padding: 2rem 5%;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,215,0,0.02) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--brand-yellow);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      position: relative;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 2.2rem auto;
+      padding: 0 1.8rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-color);
+    }
+
+    h2 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin: 1.5rem 0 1.1rem;
+      color: var(--brand-yellow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: "";
+      display: inline-block;
+      width: 5px;
+      height: 22px;
+      background: var(--brand-yellow);
+      border-radius: 2px;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      color: var(--brand-yellow);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: #1e1e1e;
+      color: #f0f0f0;
+      border: 1px solid #444;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--brand-yellow);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    .small-note {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-top: -0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.2rem;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background: rgba(255, 215, 0, 0.08);
+      color: var(--brand-yellow);
+      font-weight: 700;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .btn-group {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    button {
+      background: var(--brand-yellow);
+      color: #000;
+      border: none;
+      padding: 0.85rem 1.6rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2);
+    }
+
+    button:hover {
+      background: var(--brand-yellow-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 215, 0, 0.35);
+    }
+
+    .btn-secondary {
+      background: #2a2a2a;
+      color: var(--brand-yellow);
+      border: 1px solid var(--brand-yellow);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    #summary {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #333;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    @media print {
+      body { background: white; color: black; }
+      .card { box-shadow: none; border: 1px solid #000; background: white; }
+      h1, h2, th, button { color: black !important; }
+      input, select, textarea { background: white !important; color: black !important; border-color: #000 !important; }
+      .btn-group { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.5rem; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Kontrak Tukang Harian — Holton Konstruksi</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>1. Informasi Pihak & Proyek</h2>
+      <label>Nama Pemilik (Owner):</label>
+      <input type="text" id="ownerName" placeholder="Nama lengkap Anda">
+
+      <label>Nama Tukang / Mandor:</label>
+      <input type="text" id="workerName" placeholder="Nama tukang atau mandor">
+
+      <label>Jenis Tukang:</label>
+      <select id="workerSkill">
+        <option value="">— Pilih Keahlian —</option>
+        <option value="tukang batu">Tukang Batu</option>
+        <option value="tukang kayu">Tukang Kayu</option>
+        <option value="tukang finishing">Tukang Finishing</option>
+        <option value="tukang listrik">Tukang Listrik</option>
+        <option value="tukang plambing">Tukang Plambing</option>
+        <option value="kenek">Kenek / Helper</option>
+        <option value="lainnya">Lainnya</option>
+      </select>
+
+      <label>Kota Proyek:</label>
+      <select id="city">
+        <option value="">— Pilih Kota —</option>
+        <option value="jakarta">Jakarta</option>
+        <option value="bandung">Bandung</option>
+        <option value="semarang">Semarang</option>
+        <option value="yogyakarta">Yogyakarta</option>
+        <option value="malang">Malang</option>
+        <option value="surabaya">Surabaya</option>
+        <option value="medan">Medan</option>
+        <option value="makassar">Makassar</option>
+        <option value="lainnya">Lainnya</option>
+      </select>
+
+      <label>Durasi Kerja (hari):</label>
+      <input type="number" id="duration" min="1" placeholder="Contoh: 10">
+
+      <h2>2. Upah & Pembayaran</h2>
+      <p class="small-note">※ Kisaran upah harian 2025–2026 (referensi Holton Konstruksi):<br>
+        Jakarta: Rp 180.000–350.000 | Surabaya: Rp 150.000–280.000 | Daerah lain: sesuaikan lokal.</p>
+
+      <label>Upah Harian (Rp):</label>
+      <input type="number" id="dailyWage" min="0" placeholder="Misal: 200000">
+
+      <label>Skema Pembayaran:</label>
+      <select id="paymentScheme">
+        <option value="harian">Harian</option>
+        <option value="mingguan">Mingguan</option>
+        <option value="progres">Berdasarkan Progres Pekerjaan</option>
+      </select>
+
+      <h2>3. Jam Kerja & Lembur</h2>
+      <label>Jam Kerja Normal per Hari:</label>
+      <input type="number" id="normalHours" min="1" max="12" placeholder="Contoh: 8">
+
+      <label>Tarif Lembur:</label>
+      <input type="text" id="overtimeRate" placeholder="Contoh: 1.5× upah per jam">
+
+      <label>Fasilitas Makan:</label>
+      <p style="margin-top:0.3rem;color:#ccc;">✅ 1× makan utama per hari kerja<br>✅ Tambahan 1× jika lembur > 2 jam</p>
+
+      <h2>4. Fasilitas & Proteksi</h2>
+      <label>Akomodasi (jika diperlukan):</label>
+      <input type="text" id="accommodation" placeholder="Contoh: Tidak disediakan / Mess disediakan">
+
+      <label>Transportasi:</label>
+      <input type="text" id="transport" placeholder="Contoh: Biaya transport ditanggung owner">
+
+      <label>Proteksi Risiko:</label>
+      <input type="text" id="riskProtection" placeholder="Contoh: APD disediakan, asuransi tidak termasuk">
+
+      <h2>5. Sanksi & Reward</h2>
+      <label>Sanksi Keterlambatan / Kelalaian:</label>
+      <textarea id="penalty" placeholder="Contoh: Potong upah 10% per hari keterlambatan"></textarea>
+
+      <label>Reward Kinerja:</label>
+      <textarea id="reward" placeholder="Contoh: Bonus Rp 50.000 jika pekerjaan selesai cepat & rapi"></textarea>
+
+      <h2>6. Ketentuan Lain</h2>
+      <label>Pemutusan Kerja:</label>
+      <textarea id="termination" placeholder="Contoh: Bisa dibatalkan dengan pemberitahuan 1 hari sebelumnya"></textarea>
+
+      <label>Catatan Tambahan:</label>
+      <textarea id="notes" placeholder="Catatan penting lainnya"></textarea>
+
+      <div class="btn-group">
+        <button onclick="saveData()">💾 Simpan</button>
+        <button onclick="loadData()" class="btn-secondary">📥 Muat Data</button>
+        <button onclick="resetForm()" class="btn-secondary">🗑️ Reset</button>
+        <button onclick="exportPDF()">🖨️ Simpan sebagai PDF</button>
+      </div>
+
+      <div id="summary"></div>
+
+      <footer>
+        Dibuat pada: <span id="currentDate"></span> | Holton Konstruksi © 2025
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    function saveData() {
+      if (!confirm("Simpan kontrak ke penyimpanan lokal?")) return;
+      const data = {
+        ownerName: document.getElementById('ownerName').value,
+        workerName: document.getElementById('workerName').value,
+        workerSkill: document.getElementById('workerSkill').value,
+        city: document.getElementById('city').value,
+        duration: document.getElementById('duration').value,
+        dailyWage: document.getElementById('dailyWage').value,
+        paymentScheme: document.getElementById('paymentScheme').value,
+        normalHours: document.getElementById('normalHours').value,
+        overtimeRate: document.getElementById('overtimeRate').value,
+        accommodation: document.getElementById('accommodation').value,
+        transport: document.getElementById('transport').value,
+        riskProtection: document.getElementById('riskProtection').value,
+        penalty: document.getElementById('penalty').value,
+        reward: document.getElementById('reward').value,
+        termination: document.getElementById('termination').value,
+        notes: document.getElementById('notes').value
+      };
+      localStorage.setItem('kontrakTukangHolton', JSON.stringify(data));
+      alert("✅ Kontrak berhasil disimpan.");
+    }
+
+    function loadData() {
+      const stored = localStorage.getItem('kontrakTukangHolton');
+      if (!stored) return alert("❌ Tidak ada data tersimpan.");
+      if (!confirm("Muat data yang tersimpan?")) return;
+      const data = JSON.parse(stored);
+      for (const key in data) {
+        if (document.getElementById(key)) document.getElementById(key).value = data[key];
+      }
+      renderSummary();
+      alert("✅ Data dimuat.");
+    }
+
+    function resetForm() {
+      if (!confirm("Reset seluruh formulir?")) return;
+      document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+      document.getElementById('summary').innerHTML = '';
+      document.getElementById('currentDate').innerText = '';
+    }
+
+    function renderSummary() {
+      const owner = document.getElementById('ownerName').value || '—';
+      const worker = document.getElementById('workerName').value || '—';
+      const skill = document.getElementById('workerSkill').value || '—';
+      const city = document.getElementById('city').value || '—';
+      const duration = parseFloat(document.getElementById('duration').value) || 0;
+      const daily = parseFloat(document.getElementById('dailyWage').value) || 0;
+      const total = daily * duration;
+
+      document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID');
+
+      document.getElementById('summary').innerHTML = `
+        <h2>📄 Ringkasan Kontrak</h2>
+        <table>
+          <tr><th>Pemilik</th><td>${owner}</td></tr>
+          <tr><th>Tukang / Mandor</th><td>${worker}</td></tr>
+          <tr><th>Keahlian</th><td>${skill}</td></tr>
+          <tr><th>Lokasi</th><td>${city}</td></tr>
+          <tr><th>Durasi</th><td>${duration} hari</td></tr>
+          <tr><th>Upah Harian</th><td>Rp ${daily.toLocaleString('id-ID')}</td></tr>
+          <tr><th>Pembayaran</th><td>${document.getElementById('paymentScheme').value || '—'}</td></tr>
+          <tr><th>Jam Kerja</th><td>${document.getElementById('normalHours').value || '—'} jam/hari</td></tr>
+          <tr><th>Lembur</th><td>${document.getElementById('overtimeRate').value || '—'}</td></tr>
+          <tr><th>Makan</th><td>1× utama + tambahan jika lembur</td></tr>
+          <tr><th>Akomodasi</th><td>${document.getElementById('accommodation').value || '—'}</td></tr>
+          <tr><th>Transport</th><td>${document.getElementById('transport').value || '—'}</td></tr>
+          <tr><th>Proteksi Risiko</th><td>${document.getElementById('riskProtection').value || '—'}</td></tr>
+          <tr><th>Sanksi</th><td>${document.getElementById('penalty').value || '—'}</td></tr>
+          <tr><th>Reward</th><td>${document.getElementById('reward').value || '—'}</td></tr>
+          <tr><th>Pemutusan</th><td>${document.getElementById('termination').value || '—'}</td></tr>
+          <tr><th>Catatan</th><td>${document.getElementById('notes').value || '—'}</td></tr>
+          <tr><th style="color:var(--brand-yellow);">Total Estimasi Biaya</th><td><strong>Rp ${total.toLocaleString('id-ID')}</strong></td></tr>
+        </table>
+      `;
+    }
+
+    function exportPDF() {
+      renderSummary();
+      const element = document.getElementById('summary');
+      if (!element.innerHTML.trim()) return alert("❌ Isi kontrak terlebih dahulu.");
+      const opt = {
+        margin: 0.6,
+        filename: `kontrak_tukang_${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    }
+
+    // Muat otomatis saat halaman dibuka
+    window.addEventListener('load', () => {
+      const stored = localStorage.getItem('kontrakTukangHolton');
+      if (stored) {
+        const data = JSON.parse(stored);
+        for (const key in data) {
+          if (document.getElementById(key)) document.getElementById(key).value = data[key];
+        }
+        renderSummary();
+      }
+    });
+  </script>
+</body>
+</html>
